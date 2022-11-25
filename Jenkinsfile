@@ -13,6 +13,12 @@ spec:
       name: docker-socket-volume
     securityContext:
       privileged: true
+  - name: "kaniko"
+    image: "gcr.io/kaniko-project/executor:debug"
+    command:
+    - "cat"
+    imagePullPolicy: "IfNotPresent"
+    tty: true
   volumes:
   - name: docker-socket-volume
     hostPath:
