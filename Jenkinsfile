@@ -32,7 +32,6 @@ spec:
           defaultContainer 'shell'
         }
     }
-
     stages {
         stage('Prepare environment') {
             steps {
@@ -41,7 +40,10 @@ spec:
         }
         stage('Build') {
             steps {
-                sh 'npm install && npm run build'
+                // sh 'npm install && npm run build'
+                sh 'npm install'
+                sh 'npm run build &'
+                sleep 30
             }
         }
         stage("Quality Tests") {
@@ -72,6 +74,22 @@ spec:
 
                 }
             }
+        }
+        stage('Run test environment') {
+            steps {
+                sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
+                sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-frontend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
+            }
+        }
+        stage('Selenium') {
+            steps {
+                sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
+            }
+        }
+    }
+    post {
+        always {
+          echo 'Post always'
         }
     }
 }
