@@ -19,6 +19,13 @@ spec:
     - "cat"
     imagePullPolicy: "IfNotPresent"
     tty: true
+  - name: java
+    image: juliocvp/jenkins-nodo-java-bootcamp:1.0
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-socket-volume
+    securityContext:
+      privileged: true
   volumes:
   - name: docker-socket-volume
     hostPath:
@@ -46,13 +53,13 @@ spec:
                 sleep 30
             }
         }
-        stage("Quality Tests") {
-            steps {
-                withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
-                    sh 'npm run sonar'
-                }
-            }
-        }
+        // stage("Quality Tests") {
+        //     steps {
+        //         withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
+        //             sh 'npm run sonar'
+        //         }
+        //     }
+        // }
         stage('Build & Push') {
             steps {
                 script {
@@ -81,11 +88,35 @@ spec:
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-frontend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
         }
-        // stage('Selenium') {
-        //     steps {
-        //         sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
-        //     }
-        // }
+        stage('Selenium') {
+            steps {
+                sleep 30
+                container("java"){
+                    //levantar chrome-standalone
+                    sh "kubectl apply -f configuracion/kubernetes-deployments/standalone-chrome/manifest.yaml --kubeconfig=configuracion/kubernetes-config/config"
+                    sleep 30
+                    
+                    sh "git clone https://github.com/juliocvp/functional-e2e-test.git testSelenium --branch practica-final"
+                    //"https://chrome-standalone.loca.lt/"
+                    //Run test
+                    dir("testSelenium") {
+                        sh "pwd"
+                        sh 'mvn clean verify -Dwebdriver.remote.url=https://chrome-standalone.loca.lt/ -Dwebdriver.remote.driver=chrome -Dchrome.switches="--no-sandbox,--ignore-certificate-errors,--homepage=about:blank,--no-first-run,--headless"'
+
+                        sh 'mvn serenity:aggregate'
+
+                        publishHTML(target: [
+                            reportName : 'Serenity',
+                            reportDir:   'target/site/serenity',
+                            reportFiles: 'index.html',
+                            keepAll:     true,
+                            alwaysLinkToLastBuild: true,
+                            allowMissing: false
+                        ])
+                    }
+                }
+            }
+        }
     }
     post {
         always {
