@@ -46,13 +46,13 @@ spec:
                 sleep 30
             }
         }
-        stage("Quality Tests") {
-            steps {
-                withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
-                    sh 'npm run sonar'
-                }
-            }
-        }
+        // stage("Quality Tests") {
+        //     steps {
+        //         withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
+        //             sh 'npm run sonar'
+        //         }
+        //     }
+        // }
         stage('Build & Push') {
             steps {
                 script {
@@ -81,11 +81,11 @@ spec:
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-frontend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
         }
-        stage('Selenium') {
-            steps {
-                sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
-            }
-        }
+        // stage('Selenium') {
+        //     steps {
+        //         sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
+        //     }
+        // }
     }
     post {
         always {
