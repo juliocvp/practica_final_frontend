@@ -92,7 +92,7 @@ spec:
                 sleep 30
                 container("java"){
                     //levantar chrome-standalone
-                    sh "kubectl apply -f configuracion/kubernetes-deployments/standalone-chrome/manifest.yaml --kubeconfig=configuracion/kubernetes-config/config"
+                    sh "kubectl apply -f configuracion/kubernetes-deployments/standalone-chrome/manifest.yml --kubeconfig=configuracion/kubernetes-config/config"
                     sleep 30
                     
                     sh "git clone https://github.com/juliocvp/functional-e2e-test.git testSelenium --branch practica-final"
