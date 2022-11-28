@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Tutorial } from '../models/tutorial.model';
 
 //const baseUrl = 'https://backendjcvp.loca.lt/api/tutorials';
-const baseUrl = 'http://localhost:30001/api/tutorials';
+const baseUrl = 'https://3b39-213-0-57-163.eu.ngrok.io/api/tutorials';
 
 @Injectable({
   providedIn: 'root'
