@@ -52,13 +52,13 @@ spec:
                 sleep 30
             }
         }
-        // stage("Quality Tests") {
-        //     steps {
-        //         withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
-        //             sh 'npm run sonar'
-        //         }
-        //     }
-        // }
+        stage("Quality Tests") {
+            steps {
+                withSonarQubeEnv(credentialsId: "sonarqube-credentials", installationName: "sonarqube-server"){
+                    sh 'npm run sonar'
+                }
+            }
+        }
         stage('Build & Push') {
             steps {
                 script {
