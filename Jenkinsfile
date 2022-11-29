@@ -83,7 +83,12 @@ spec:
         }
         stage('Run test environment') {
             steps {
+                //"juliocvp/practica-final-frontend:latest"
                 sh "git clone https://github.com/juliocvp/kubernetes-helm-docker-config.git configuracion --branch test-implementation"
+
+                def imagen = "juliocvp/practica-final-frontend:latest"
+                sh "sed -i.bak 's#IMAGE_NAME#${imagen}#' ./configuracion/kubernetes-deployments/practica-final-frontend/deployment.yaml"
+
                 sh "kubectl apply -f configuracion/kubernetes-deployments/practica-final-frontend/deployment.yaml --kubeconfig=configuracion/kubernetes-config/config"
             }
         }
@@ -119,7 +124,7 @@ spec:
     }
     post {
         always {
-          echo 'Post always'
+          sh 'docker logout'
         }
     }
 }
