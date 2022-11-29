@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tutorial } from '../models/tutorial.model';
 
-const baseUrl = 'http://spring-boot-app.default:8082/api/tutorials';
+const baseUrl = 'https://dc22-213-0-57-163.eu.ngrok.io/api/tutorials';
 
 @Injectable({
   providedIn: 'root'
